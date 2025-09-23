@@ -137,12 +137,6 @@ The Privy Global Wallet popup still fails with "Chain ID 267 is not supported" e
 
 ## 🎯 For Privy Developers
 
-### Key Questions
-
-1. **Chain Configuration**: Why does Privy Global Wallet not recognize `chainId: 267` despite being in `supportedChains`?
-2. **Default Chain**: Why does omitting `chainId` default to ETH Mainnet instead of the configured `defaultChain`?
-3. **Cross-App Integration**: Is there additional configuration required for custom chains in Global Wallet scenarios?
-
 ### Debugging Suggestions
 
 1. Check if Global Wallet provider has its own chain validation logic
