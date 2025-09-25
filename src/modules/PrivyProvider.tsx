@@ -14,26 +14,11 @@ interface PrivyProviderProps {
 }
 
 export function PrivyProvider({ children }: PrivyProviderProps) {
-  // @ts-ignore
-  // @ts-ignore
   return (
     <PrivyProviderBase
       appId={PRIVY_APP_ID}
       config={{
         loginMethodsAndOrder: { primary: [`privy:${NEURA_PROVIDER_APP_ID}`] },
-        embeddedWallets: {
-          ethereum: {
-            createOnLogin: "users-without-wallets",
-          },
-
-
-          showWalletUIs: true,
-          // @ts-ignore
-          requireUserPasswordOnCreate: true,
-        },
-        appearance: {
-          showWalletLoginFirst: true,
-        },
         defaultChain: neuraTestnet,
         supportedChains: [neuraTestnet],
       }}

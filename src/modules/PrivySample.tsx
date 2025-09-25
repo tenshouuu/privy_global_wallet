@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 export function PrivySample() {
   const { authenticated, ready, user } = usePrivy();
   const { wallets, ready: walletsReady } = useWallets();
-  console.log('Privy user', user);
+  console.log('Privy user', user, wallets);
 
   const { signTransaction } = useCrossAppAccounts();
   const { logout } = useLogout();
@@ -96,8 +96,8 @@ export function PrivySample() {
 
       console.log('Signing transaction without chainId:', testTransaction);
 
-      // Type assertion to bypass TypeScript requirement for chainId
-      const signature = await signTransaction(testTransaction as any, { address: neuraGlobalWalletAccount });
+      // Type casting to bypass TypeScript requirement for chainId
+      const signature = await signTransaction(testTransaction as unknown as never, { address: neuraGlobalWalletAccount });
 
       setSignResult(`Transaction without chainId signed successfully! Signature: ${signature}`);
       console.log('Transaction signature:', signature);
