@@ -1,4 +1,4 @@
-import { PrivyProvider as PrivyProviderBase } from '@privy-io/react-auth';
+import { PrivyProvider } from '@privy-io/react-auth';
 import { WagmiProvider } from '@privy-io/wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -13,9 +13,9 @@ interface PrivyProviderProps {
   children?: React.ReactNode;
 }
 
-export function PrivyProvider({ children }: PrivyProviderProps) {
+export function AppPrivyProvider() {
   return (
-    <PrivyProviderBase
+    <PrivyProvider
       appId={PRIVY_APP_ID}
       config={{
         loginMethodsAndOrder: { primary: [`privy:${NEURA_PROVIDER_APP_ID}`] },
@@ -28,6 +28,6 @@ export function PrivyProvider({ children }: PrivyProviderProps) {
           <PrivySample />
         </WagmiProvider>
       </QueryClientProvider>
-    </PrivyProviderBase>
+    </PrivyProvider>
   );
 }

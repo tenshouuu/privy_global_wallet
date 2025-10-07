@@ -1,4 +1,4 @@
-import { PrivyProvider } from '@/modules/PrivyProvider';
+import { AppPrivyProvider } from '@/modules/PrivyProvider';
 import Head from "next/head";
 import { Geist, Geist_Mono } from "next/font/google";
 import styles from "@/styles/Home.module.css";
@@ -26,7 +26,7 @@ export default function Home() {
         className={`${styles.page} ${geistSans.variable} ${geistMono.variable}`}
       >
         <main className={styles.main}>
-          <PrivyProvider />
+          <AppPrivyProvider />
         </main>
       </div>
     </>
