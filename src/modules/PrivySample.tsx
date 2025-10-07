@@ -23,13 +23,14 @@ export function PrivySample() {
   const [signResult, setSignResult] = useState<string | null>(null);
   const [signError, setSignError] = useState<string | null>(null);
 
+  // Regarding to https://docs.privy.io/wallets/global-wallets/integrate-a-global-wallet/getting-global-wallets#getting-global-wallets
   const crossAppAccount = user?.linkedAccounts?.find(
     (account) => account.type === 'cross_app' && account.providerApp.id === NEURA_PROVIDER_APP_ID
-  ) as CrossAppAccount | undefined
+  ) as CrossAppAccount | undefined;
+  const neuraGlobalWalletAccount = crossAppAccount?.embeddedWallets?.[0]?.address;
 
 
   const isConnected = !!crossAppAccount && ready && authenticated && walletsReady;
-  const neuraGlobalWalletAccount = crossAppAccount?.embeddedWallets?.[0]?.address;
 
   // Reset state when connection status changes
   useEffect(() => {
@@ -67,6 +68,7 @@ export function PrivySample() {
 
       console.log('Signing transaction with chainId:', testTransaction);
 
+      // https://docs.privy.io/wallets/global-wallets/integrate-a-global-wallet/using-global-wallets
       const signature = await signTransaction(testTransaction, { address: neuraGlobalWalletAccount });
 
       setSignResult(`Transaction with chainId signed successfully! Signature: ${signature}`);
@@ -74,36 +76,6 @@ export function PrivySample() {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       setSignError(`Failed to sign transaction with chainId: ${errorMessage}`);
-      console.error('Transaction signing error:', error);
-    } finally {
-      setIsSigning(false);
-    }
-  };
-
-  // Handle transaction signing without chainId (using type assertion to bypass TypeScript)
-  const handleSignTransactionWithoutChainId = async () => {
-    if (!crossAppAccount || !neuraGlobalWalletAccount) {
-      setSignError('No cross-app account or wallet address available');
-      return;
-    }
-
-    setIsSigning(true);
-    setSignError(null);
-    setSignResult(null);
-
-    try {
-      const testTransaction = baseTransactionProps;
-
-      console.log('Signing transaction without chainId:', testTransaction);
-
-      // Type casting to bypass TypeScript requirement for chainId
-      const signature = await signTransaction(testTransaction as unknown as never, { address: neuraGlobalWalletAccount });
-
-      setSignResult(`Transaction without chainId signed successfully! Signature: ${signature}`);
-      console.log('Transaction signature:', signature);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      setSignError(`Failed to sign transaction without chainId: ${errorMessage}`);
       console.error('Transaction signing error:', error);
     } finally {
       setIsSigning(false);
@@ -118,44 +90,37 @@ export function PrivySample() {
       </div>
       <br/>
 
-      <button onClick={() => logout()}>Logout</button>
+      <button
+        style={{
+          padding: '10px 20px',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          fontSize: '14px',
+          color: 'white',
+          marginBottom: '20px',
+        }}
+        onClick={() => logout()}>Logout</button>
       <br/>
       <br/>
 
-      {/* Transaction signing buttons */}
-      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
-        <button
-          onClick={handleSignTransactionWithoutChainId}
-          disabled={isSigning}
-          style={{
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: isSigning ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
-            backgroundColor: 'green',
-            color: 'white',
-          }}
-        >
-          {isSigning ? 'Signing...' : 'Sign Transaction (No ChainId)'}
-        </button>
-
-        <button
-          onClick={handleSignTransactionWithChainId}
-          disabled={isSigning}
-          style={{
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: isSigning ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
-            backgroundColor: 'red',
-            color: 'white',
-          }}
-        >
-          {isSigning ? 'Signing...' : `Sign Transaction (With ChainId ${DEFAULT_CHAIN_ID})`}
-        </button>
-      </div>
+      {/* Transaction signing button */}
+      <button
+        onClick={handleSignTransactionWithChainId}
+        disabled={isSigning}
+        style={{
+          padding: '10px 20px',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: isSigning ? 'not-allowed' : 'pointer',
+          fontSize: '14px',
+          backgroundColor: 'green',
+          color: 'white',
+          marginBottom: '20px',
+        }}
+      >
+        {isSigning ? 'Signing...' : 'Sign Transaction'}
+      </button>
 
       {/* Results display */}
       {signResult && (
@@ -191,6 +156,19 @@ export function PrivySample() {
 
     <br />
 
-    <button onClick={() => login()}>Login</button>
+    <button
+      onClick={() => login()}
+      style={{
+        padding: '10px 20px',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        fontSize: '14px',
+        color: 'white',
+        marginBottom: '20px',
+      }}
+    >
+      Login
+    </button>
   </div>);
 }
