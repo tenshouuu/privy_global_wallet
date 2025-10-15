@@ -18,7 +18,7 @@ export function AppPrivyProvider() {
     <PrivyProvider
       appId={PRIVY_APP_ID}
       config={{
-        loginMethodsAndOrder: { primary: [`privy:${NEURA_PROVIDER_APP_ID}`] },
+        loginMethodsAndOrder: { primary: [`privy:${NEURA_PROVIDER_APP_ID}`, 'google'] },
         defaultChain: neuraTestnet,
         supportedChains: [neuraTestnet],
       }}
