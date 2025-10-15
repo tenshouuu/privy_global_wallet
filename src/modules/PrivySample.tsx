@@ -50,7 +50,7 @@ export function PrivySample() {
   };
 
   // Handle transaction signing with chainId
-  const handleSignTransactionWithChainId = async () => {
+  const handleSignTransaction = () => {
     if (!crossAppAccount || !neuraGlobalWalletAccount) {
       setSignError('No cross-app account or wallet address available');
       return;
@@ -60,26 +60,22 @@ export function PrivySample() {
     setSignError(null);
     setSignResult(null);
 
-    try {
-      const testTransaction = {
-        ...baseTransactionProps,
-        chainId: DEFAULT_CHAIN_ID,
-      };
+    const testTransaction = {
+      ...baseTransactionProps,
+      chainId: DEFAULT_CHAIN_ID,
+    };
 
-      console.log('Signing transaction with chainId:', testTransaction);
-
-      // https://docs.privy.io/wallets/global-wallets/integrate-a-global-wallet/using-global-wallets
-      const signature = await signTransaction(testTransaction, { address: neuraGlobalWalletAccount });
-
-      setSignResult(`Transaction with chainId signed successfully! Signature: ${signature}`);
-      console.log('Transaction signature:', signature);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      setSignError(`Failed to sign transaction with chainId: ${errorMessage}`);
-      console.error('Transaction signing error:', error);
-    } finally {
-      setIsSigning(false);
-    }
+    void signTransaction(testTransaction, { address: neuraGlobalWalletAccount })
+      .then((signature => {
+        console.log('Signing transaction with chainId:', testTransaction);
+        setSignResult(`Transaction signed successfully! Signature: ${signature}`);
+      }))
+      .catch((error) => {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        setSignError(`Failed to sign transaction: ${errorMessage}`);
+        console.error('Transaction signing error:', error);
+      })
+      .finally(() => setIsSigning(false));
   };
 
   if (isConnected) {
@@ -106,7 +102,7 @@ export function PrivySample() {
 
       {/* Transaction signing button */}
       <button
-        onClick={handleSignTransactionWithChainId}
+        onClick={handleSignTransaction}
         disabled={isSigning}
         style={{
           padding: '10px 20px',
